@@ -9,11 +9,11 @@ click==8.1.8
 colorama==0.4.6
 crewai==1.14.4
 crewai-tools==1.14.4
-chromadb==1.1.1
+chromadb>=0.5,<1.0
 httpx==0.28.1
-numpy==2.4.4
+numpy<2.0
 openai==2.33.0
 pydantic==2.11.10
 python-dotenv>=1.2.2
 requests==2.32.5
-urllib3==2.6.3
+urllib3<2.3
