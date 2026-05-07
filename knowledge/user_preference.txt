@@ -1,0 +1,7 @@
+Name: Bhavin Khatri
+Job Title: HR/Admin/Recruitment Professional
+Experience: 12+ years
+Location: Nova Scotia, Canada
+Target Roles: Talent Acquisition Specialist, HR Generalist, Mid-level HR Business Partner
+Preferences: Focus on Canadian HR roles, remote/hybrid options preferred, salary range 80k-120k CAD
+API Key: your_openai_api_key_here

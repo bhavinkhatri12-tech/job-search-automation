@@ -1,0 +1,35 @@
+name: Daily Job Search Automation
+
+on:
+  schedule:
+    - cron: "0 13 * * *"  # 9 AM Halifax (AST = UTC-4)
+  workflow_dispatch:
+
+jobs:
+  run-job-search:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Job Search Bot
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+        run: |
+          python -m canadian_hr_job_search_assistant.main scheduler

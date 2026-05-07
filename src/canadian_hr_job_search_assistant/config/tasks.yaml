@@ -1,0 +1,93 @@
+---
+research_job_listings:
+  description: 'Search for and analyze job listings for {job_search_domain} roles using the search query: {job_search_query}. Use web search tools to find current job opportunities. Extract detailed information from job listings including job title, company name, location, key requirements, salary range (if available), application deadline, and job description highlights. Focus on identifying roles that match the target positions: HR Coordinator, HR Generalist, Talent Acquisition Specialist, Recruiter, and mid-level HRBP positions. Search across Indeed, LinkedIn, Glassdoor, and other Canadian job boards.'
+  expected_output: A structured list of job opportunities with complete details including job title, company, location, requirements, experience level, key responsibilities, and any specific qualifications mentioned. Include job posting URLs and application instructions.
+  agent: job_research_specialist
+score_and_match_jobs:
+  description: 'Evaluate each job opportunity against the candidate profile: Bhavin
+    Khatri (12+ years HR/Admin/Recruitment experience, Nova Scotia based). Score each
+    job from 0-100 based on skills match, experience alignment, location compatibility,
+    and role relevance. Apply priority scoring: Talent Acquisition/Recruiter (+15),
+    HR Generalist/Coordinator (+10), mid-level HRBP (+5). Categorize jobs by domain
+    and recommend only those scoring 65+. Avoid senior-level roles (Director, VP)
+    and positions requiring >5 years strict Canadian experience.'
+  expected_output: A ranked list of job opportunities with match scores, domain categorization
+    (HRBP/TA/Recruiter/HR Ops), priority ratings, and clear recommendations for which
+    jobs to apply to, including reasoning for each recommendation
+  agent: job_matching_analyst
+  context:
+  - research_job_listings
+optimize_resume:
+  description: 'Create tailored resume versions for the top-scoring job opportunities.
+    For each recommended job, customize the resume to include relevant ATS keywords,
+    highlight matching achievements from Bhavin''s 12+ years experience in HR/Admin/Recruitment,
+    and adjust the professional summary. For HRBP roles: emphasize stakeholder management
+    and workforce planning. For Recruiter/TA roles: highlight hiring metrics and ATS
+    systems experience. For HR Coordinator roles: focus on operations, compliance,
+    and HR systems expertise. Ensure Canadian market formatting standards.'
+  expected_output: Optimized resume versions for each recommended job opportunity,
+    with specific keyword integration, customized professional summary, and highlighted
+    relevant experience that matches each role's requirements
+  agent: resume_optimization_expert
+  context:
+  - score_and_match_jobs
+create_cover_letters:
+  description: 'Generate tailored cover letters for each recommended job opportunity.
+    Create role-specific content: For HRBP positions - emphasize business impact,
+    analytics, and leadership support. For Recruiter/TA roles - highlight hiring success,
+    sourcing expertise, and candidate experience. For HR Coordinator positions - focus
+    on organization, compliance, and HR systems proficiency. Each letter should be
+    concise (3-4 paragraphs), demonstrate company knowledge, and align with Canadian
+    business communication standards. Include specific examples from Bhavin''s background
+    that match the role requirements.'
+  expected_output: Personalized cover letters for each job opportunity, tailored to
+    the specific role and company, highlighting relevant experience and demonstrating
+    genuine interest in the position
+  agent: cover_letter_specialist
+  context:
+  - score_and_match_jobs
+prepare_application_packages:
+  description: Compile complete, application-ready packages for each recommended job
+    opportunity. Organize the tailored resume, customized cover letter, and prepare
+    suggested responses to common application questions (e.g., salary expectations,
+    availability, relocation willingness). Create a checklist for each application
+    including required documents, application method (company website vs. job portal),
+    and any specific submission requirements. Ensure all materials are consistent,
+    professionally formatted, and ready for immediate submission.
+  expected_output: Complete application packages for each job opportunity, including
+    final resume versions, cover letters, application question responses, submission
+    checklists, and any additional required materials, all organized and ready for
+    application
+  agent: application_package_coordinator
+  context:
+  - optimize_resume
+  - create_cover_letters
+track_job_applications:
+  description: 'Create and maintain a comprehensive tracking system for all analyzed
+    job opportunities. Record details for each job: date analyzed, company name, job
+    title, domain category (HRBP/Recruiter/TA/HR Ops), location, match score, application
+    status (To Apply/Applied/Interview/Rejected), resume version used, and follow-up
+    dates. Organize data in a structured format suitable for Google Sheets or similar
+    tracking tools. Include status updates and notes section for each entry.'
+  expected_output: A structured tracking database with all job opportunities, their
+    details, match scores, application status, and relevant notes organized in a format
+    ready for spreadsheet import
+  agent: job_search_tracker
+  context:
+  - score_and_match_jobs
+  - prepare_application_packages
+generate_daily_report:
+  description: 'Create a comprehensive daily summary report including: total jobs
+    analyzed, breakdown by domain (HRBP/Talent Acquisition/Recruiter/HR Ops), top
+    20 recommended jobs with match scores, number of application packages prepared,
+    key insights about market trends, and strategic recommendations for next steps.
+    Include highlights of the strongest opportunities and any patterns identified
+    in job requirements. Provide actionable insights for improving application success
+    and market positioning.'
+  expected_output: A professional daily report summarizing all job search activities,
+    top opportunities, application readiness status, market insights, and strategic
+    recommendations for continued job search success in the Canadian market
+  agent: daily_job_search_reporter
+  context:
+  - track_job_applications
+  - prepare_application_packages
