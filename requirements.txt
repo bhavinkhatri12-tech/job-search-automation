@@ -1,2 +1,2 @@
-crewai[file-processing,litellm,tools]==1.14.4
+crewai[file-processing,tools]==1.14.4
 schedule>=1.2.0
