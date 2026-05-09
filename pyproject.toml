@@ -5,7 +5,7 @@ description = "canadian_hr_job_search_assistant using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[file-processing,litellm,tools]==1.13.0",
+    "crewai[file-processing,litellm,tools]==1.14.4",
     "schedule>=1.2.0",
 ]
 
@@ -23,6 +23,3 @@ build-backend = "hatchling.build"
 
 [tool.crewai]
 type = "crew"
-
-[tool.uv]
-override-dependencies = ["litellm<=1.82.6"]
