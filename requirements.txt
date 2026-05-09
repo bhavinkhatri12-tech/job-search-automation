@@ -5,6 +5,7 @@ attrs==26.1.0
 beautifulsoup4==4.13.5
 certifi==2026.2.25
 charset-normalizer==3.4.7
+chromadb>=1.1.0,<1.2.0
 click==8.1.8
 colorama==0.4.6
 crewai==1.14.4
@@ -14,5 +15,5 @@ numpy<2.0
 openai==2.33.0
 pydantic==2.11.10
 python-dotenv>=1.2.2
-requests==2.32.5
-urllib3<2.3
+requests>=2.33.0
+urllib3>=2.3.0
