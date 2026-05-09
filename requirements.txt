@@ -1,2 +1,3 @@
 crewai[file-processing,tools]==1.14.4
+litellm==1.85.0.dev1
 schedule>=1.2.0
