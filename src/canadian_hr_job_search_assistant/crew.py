@@ -14,8 +14,20 @@ load_dotenv()
 # ---------------- GLOBAL LLM ----------------
 llm = LLM(
     model="groq/llama-3.3-70b-versatile",
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.2,
+    max_tokens=700,
+    timeout=300,
 )
+
+AGENT_LIMITS = {
+    "reasoning": False,
+    "inject_date": True,
+    "allow_delegation": False,
+    "max_iter": 3,
+    "max_rpm": 2,
+    "llm": llm,
+}
 
 # ---------------- EMAIL FUNCTION ----------------
 def send_email(report):
@@ -56,11 +68,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["job_research_specialist"],
             tools=[ScrapeWebsiteTool(), SerperDevTool()],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -68,11 +76,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["job_matching_analyst"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -80,11 +84,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["resume_optimization_expert"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -92,11 +92,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["cover_letter_specialist"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -104,11 +100,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["application_package_coordinator"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -116,11 +108,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["job_search_tracker"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     @agent
@@ -128,11 +116,7 @@ class CanadianHrJobSearchAssistantCrew:
         return Agent(
             config=self.agents_config["daily_job_search_reporter"],
             tools=[],
-            reasoning=False,
-            inject_date=True,
-            allow_delegation=False,
-            max_iter=25,
-            llm=llm
+            **AGENT_LIMITS,
         )
 
     # -------- TASKS --------
@@ -173,7 +157,8 @@ class CanadianHrJobSearchAssistantCrew:
             agents=self.agents,
             tasks=self.tasks,
             process=Process.sequential,
-            verbose=True
+            verbose=True,
+            max_rpm=2,
         )
 
 

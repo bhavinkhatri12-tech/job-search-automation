@@ -4,10 +4,37 @@
 import schedule
 import time
 import os
+import re
 from datetime import datetime
 from pathlib import Path
 from canadian_hr_job_search_assistant.crew import CanadianHrJobSearchAssistantCrew
 from canadian_hr_job_search_assistant.email_utils import send_email_report, create_html_report
+
+MAX_RATE_LIMIT_RETRIES = 3
+
+
+def kickoff_with_rate_limit_retry(inputs):
+    """Run the crew and wait/retry when Groq returns a TPM rate limit."""
+    for attempt in range(1, MAX_RATE_LIMIT_RETRIES + 1):
+        try:
+            return CanadianHrJobSearchAssistantCrew().crew().kickoff(inputs=inputs)
+        except Exception as e:
+            message = str(e)
+            if "rate_limit" not in message.lower() and "ratelimit" not in message.lower():
+                raise
+
+            match = re.search(r"try again in ([0-9.]+)s", message, re.IGNORECASE)
+            wait_seconds = float(match.group(1)) + 10 if match else 70
+
+            if attempt == MAX_RATE_LIMIT_RETRIES:
+                raise
+
+            log_file(
+                f"Rate limit hit; waiting {wait_seconds:.1f}s before retry "
+                f"{attempt + 1}/{MAX_RATE_LIMIT_RETRIES}"
+            )
+            print(f"Rate limit hit. Waiting {wait_seconds:.1f}s before retry...")
+            time.sleep(wait_seconds)
 
 
 def run_job_search():
@@ -26,7 +53,7 @@ def run_job_search():
     
     try:
         # Run the crew
-        result = CanadianHrJobSearchAssistantCrew().crew().kickoff(inputs=inputs)
+        result = kickoff_with_rate_limit_retry(inputs)
         
         # Parse results
         job_results = {

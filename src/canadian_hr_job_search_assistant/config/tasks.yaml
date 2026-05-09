@@ -1,7 +1,7 @@
 ---
 research_job_listings:
-  description: 'Search for and analyze job listings for {job_search_domain} roles using the search query: {job_search_query}. Use web search tools to find current job opportunities. Extract detailed information from job listings including job title, company name, location, key requirements, salary range (if available), application deadline, and job description highlights. Focus on identifying roles that match the target positions: HR Coordinator, HR Generalist, Talent Acquisition Specialist, Recruiter, and mid-level HRBP positions. Search across Indeed, LinkedIn, Glassdoor, and other Canadian job boards.'
-  expected_output: A structured list of job opportunities with complete details including job title, company, location, requirements, experience level, key responsibilities, and any specific qualifications mentioned. Include job posting URLs and application instructions.
+  description: 'Search for and analyze current job listings for {job_search_domain} roles using the search query: {job_search_query}. Find only the 5 strongest current opportunities matching HR Coordinator, HR Generalist, Talent Acquisition Specialist, Recruiter, and mid-level HRBP positions. For each job, extract job title, company, location, 3-5 key requirements, application URL, and application instructions. Keep findings concise.'
+  expected_output: A concise structured list of up to 5 job opportunities with job title, company, location, key requirements, posting URL, and application instructions.
   agent: job_research_specialist
 score_and_match_jobs:
   description: 'Evaluate each job opportunity against the candidate profile: Bhavin
@@ -9,40 +9,23 @@ score_and_match_jobs:
     job from 0-100 based on skills match, experience alignment, location compatibility,
     and role relevance. Apply priority scoring: Talent Acquisition/Recruiter (+15),
     HR Generalist/Coordinator (+10), mid-level HRBP (+5). Categorize jobs by domain
-    and recommend only those scoring 65+. Avoid senior-level roles (Director, VP)
-    and positions requiring >5 years strict Canadian experience.'
-  expected_output: A ranked list of job opportunities with match scores, domain categorization
+    and recommend only the best 3-5 jobs scoring 65+. Avoid senior-level roles
+    (Director, VP) and positions requiring >5 years strict Canadian experience.'
+  expected_output: A ranked list of up to 5 job opportunities with match scores, domain categorization
     (HRBP/TA/Recruiter/HR Ops), priority ratings, and clear recommendations for which
     jobs to apply to, including reasoning for each recommendation
   agent: job_matching_analyst
   context:
   - research_job_listings
 optimize_resume:
-  description: 'Create tailored resume versions for the top-scoring job opportunities.
-    For each recommended job, customize the resume to include relevant ATS keywords,
-    highlight matching achievements from Bhavin''s 12+ years experience in HR/Admin/Recruitment,
-    and adjust the professional summary. For HRBP roles: emphasize stakeholder management
-    and workforce planning. For Recruiter/TA roles: highlight hiring metrics and ATS
-    systems experience. For HR Coordinator roles: focus on operations, compliance,
-    and HR systems expertise. Ensure Canadian market formatting standards.'
-  expected_output: Optimized resume versions for each recommended job opportunity,
-    with specific keyword integration, customized professional summary, and highlighted
-    relevant experience that matches each role's requirements
+  description: 'Create concise resume optimization notes for the top 3 recommended jobs. For each job, provide a targeted professional summary, 5 ATS keywords, and 3 bullets to emphasize from Bhavin''s HR/Admin/Recruitment background. Ensure Canadian market formatting standards.'
+  expected_output: Resume optimization notes for up to 3 job opportunities, with targeted summary, keywords, and highlighted experience bullets.
   agent: resume_optimization_expert
   context:
   - score_and_match_jobs
 create_cover_letters:
-  description: 'Generate tailored cover letters for each recommended job opportunity.
-    Create role-specific content: For HRBP positions - emphasize business impact,
-    analytics, and leadership support. For Recruiter/TA roles - highlight hiring success,
-    sourcing expertise, and candidate experience. For HR Coordinator positions - focus
-    on organization, compliance, and HR systems proficiency. Each letter should be
-    concise (3-4 paragraphs), demonstrate company knowledge, and align with Canadian
-    business communication standards. Include specific examples from Bhavin''s background
-    that match the role requirements.'
-  expected_output: Personalized cover letters for each job opportunity, tailored to
-    the specific role and company, highlighting relevant experience and demonstrating
-    genuine interest in the position
+  description: 'Generate short cover letter drafts for the top 3 recommended job opportunities. Each letter should be 2 concise paragraphs, demonstrate company/role relevance, and align with Canadian business communication standards.'
+  expected_output: Short personalized cover letter drafts for up to 3 job opportunities.
   agent: cover_letter_specialist
   context:
   - score_and_match_jobs
@@ -79,7 +62,7 @@ track_job_applications:
 generate_daily_report:
   description: 'Create a comprehensive daily summary report including: total jobs
     analyzed, breakdown by domain (HRBP/Talent Acquisition/Recruiter/HR Ops), top
-    20 recommended jobs with match scores, number of application packages prepared,
+    5 recommended jobs with match scores, number of application packages prepared,
     key insights about market trends, and strategic recommendations for next steps.
     Include highlights of the strongest opportunities and any patterns identified
     in job requirements. Provide actionable insights for improving application success
