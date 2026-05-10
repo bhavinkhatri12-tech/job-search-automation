@@ -33,7 +33,11 @@ prepare_application_packages:
   description: Compile complete, application-ready packages for each recommended job
     opportunity. Organize the tailored resume, customized cover letter, and prepare
     suggested responses to common application questions (e.g., salary expectations,
-    availability, relocation willingness). Create a checklist for each application
+    availability, relocation willingness, work authorization, sponsorship). For Canadian
+    roles, state that Bhavin is a Canadian Permanent Resident, arrived in Canada on
+    2024-06-21, is authorized to work for any employer in Canada, and does not require
+    sponsorship. Do not claim US work authorization unless the job explicitly allows
+    Canadian-based candidates or remote Canada employment. Create a checklist for each application
     including required documents, application method (company website vs. job portal),
     and any specific submission requirements. Ensure all materials are consistent,
     professionally formatted, and ready for immediate submission.

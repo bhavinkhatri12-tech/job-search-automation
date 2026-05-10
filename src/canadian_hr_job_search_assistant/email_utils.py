@@ -3,6 +3,7 @@
 
 import smtplib
 import os
+import html
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -142,6 +143,39 @@ def create_html_report(job_results: dict) -> str:
     """
     
     return html
+
+
+def create_crew_output_report(report_text: str) -> str:
+    """Create an HTML email from the CrewAI final report."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    safe_report = html.escape(report_text).replace("\n", "<br>")
+
+    return f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; background-color: #f5f5f5; color: #222; }}
+            .container {{ max-width: 900px; margin: 0 auto; background-color: white; padding: 24px; border-radius: 8px; }}
+            .header {{ background-color: #2c3e50; color: white; padding: 18px 20px; border-radius: 8px; margin-bottom: 20px; }}
+            .report {{ line-height: 1.6; font-size: 14px; }}
+            .footer {{ color: #777; font-size: 12px; padding-top: 18px; border-top: 1px solid #ddd; margin-top: 24px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Daily Job Search Report</h1>
+                <p>Generated on {timestamp}</p>
+                <p>Candidate: Bhavin Khatri - HR/Admin/Recruitment Professional</p>
+            </div>
+            <div class="report">{safe_report}</div>
+            <div class="footer">
+                <p>This is an automated report from Canadian HR Job Search Assistant.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
 
 
 def format_jobs_html(jobs: list) -> str:

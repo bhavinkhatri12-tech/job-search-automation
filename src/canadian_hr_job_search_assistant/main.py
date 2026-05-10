@@ -14,10 +14,10 @@ def run():
     """
     inputs = {
         'job_search_domain': 'Canadian HR',
-        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada',
-        'target_roles': 'Talent Acquisition Specialist, HR Generalist, Mid-level HR Business Partner',
+        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada. Canadian Permanent Resident, arrived in Canada on 2024-06-21, authorized to work for any employer in Canada, no sponsorship required for Canadian roles.',
+        'target_roles': 'Talent Acquisition Specialist, Recruiter, HR Generalist, Mid-level HR Business Partner, HR Coordinator, People Operations roles',
         'job_title': 'HR/Admin/Recruitment Professional',
-        'job_search_query': 'HR jobs in Nova Scotia Canada Talent Acquisition Recruiter HR Generalist'
+        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations'
     }
     CanadianHrJobSearchAssistantCrew().crew().kickoff(inputs=inputs)
 
@@ -28,10 +28,10 @@ def train():
     """
     inputs = {
         'job_search_domain': 'Canadian HR',
-        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada',
-        'target_roles': 'Talent Acquisition Specialist, HR Generalist, Mid-level HR Business Partner',
+        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada. Canadian Permanent Resident, arrived in Canada on 2024-06-21, authorized to work for any employer in Canada, no sponsorship required for Canadian roles.',
+        'target_roles': 'Talent Acquisition Specialist, Recruiter, HR Generalist, Mid-level HR Business Partner, HR Coordinator, People Operations roles',
         'job_title': 'HR/Admin/Recruitment Professional',
-        'job_search_query': 'HR jobs in Nova Scotia Canada Talent Acquisition Recruiter HR Generalist'
+        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations'
     }
     try:
         CanadianHrJobSearchAssistantCrew().crew().train(n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs)
@@ -55,10 +55,10 @@ def test():
     """
     inputs = {
         'job_search_domain': 'Canadian HR',
-        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada',
-        'target_roles': 'Talent Acquisition Specialist, HR Generalist, Mid-level HR Business Partner',
+        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada. Canadian Permanent Resident, arrived in Canada on 2024-06-21, authorized to work for any employer in Canada, no sponsorship required for Canadian roles.',
+        'target_roles': 'Talent Acquisition Specialist, Recruiter, HR Generalist, Mid-level HR Business Partner, HR Coordinator, People Operations roles',
         'job_title': 'HR/Admin/Recruitment Professional',
-        'job_search_query': 'HR jobs in Nova Scotia Canada Talent Acquisition Recruiter HR Generalist'
+        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations'
     }
     try:
         CanadianHrJobSearchAssistantCrew().crew().test(n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs)

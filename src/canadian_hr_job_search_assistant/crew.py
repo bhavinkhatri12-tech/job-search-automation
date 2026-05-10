@@ -25,7 +25,7 @@ AGENT_LIMITS = {
     "inject_date": True,
     "allow_delegation": False,
     "max_iter": 3,
-    "max_rpm": 2,
+    "max_rpm": 1,
     "llm": llm,
 }
 
@@ -158,7 +158,7 @@ class CanadianHrJobSearchAssistantCrew:
             tasks=self.tasks,
             process=Process.sequential,
             verbose=True,
-            max_rpm=2,
+            max_rpm=1,
         )
 
 

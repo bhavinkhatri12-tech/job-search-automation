@@ -8,9 +8,9 @@ import re
 from datetime import datetime
 from pathlib import Path
 from canadian_hr_job_search_assistant.crew import CanadianHrJobSearchAssistantCrew
-from canadian_hr_job_search_assistant.email_utils import send_email_report, create_html_report
+from canadian_hr_job_search_assistant.email_utils import send_email_report, create_crew_output_report
 
-MAX_RATE_LIMIT_RETRIES = 3
+MAX_RATE_LIMIT_RETRIES = 6
 
 
 def kickoff_with_rate_limit_retry(inputs):
@@ -24,7 +24,8 @@ def kickoff_with_rate_limit_retry(inputs):
                 raise
 
             match = re.search(r"try again in ([0-9.]+)s", message, re.IGNORECASE)
-            wait_seconds = float(match.group(1)) + 10 if match else 70
+            suggested_wait = float(match.group(1)) if match else 0
+            wait_seconds = max(suggested_wait + 10, 75)
 
             if attempt == MAX_RATE_LIMIT_RETRIES:
                 raise
@@ -45,27 +46,18 @@ def run_job_search():
     
     inputs = {
         'job_search_domain': 'Canadian HR',
-        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada',
-        'target_roles': 'Talent Acquisition Specialist, HR Generalist, Mid-level HR Business Partner',
+        'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada. Canadian Permanent Resident, arrived in Canada on 2024-06-21, authorized to work for any employer in Canada, no sponsorship required for Canadian roles.',
+        'target_roles': 'Talent Acquisition Specialist, Recruiter, HR Generalist, Mid-level HR Business Partner, HR Coordinator, People Operations roles',
         'job_title': 'HR/Admin/Recruitment Professional',
-        'job_search_query': 'HR jobs in Nova Scotia Canada Talent Acquisition Recruiter HR Generalist'
+        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations'
     }
     
     try:
         # Run the crew
         result = kickoff_with_rate_limit_retry(inputs)
         
-        # Parse results
-        job_results = {
-            'total_jobs': 0,
-            'applied_count': 0,
-            'jobs': [],
-            'status': 'Completed Successfully',
-            'timestamp': datetime.now().isoformat()
-        }
-        
         # Create HTML report
-        html_report = create_html_report(job_results)
+        html_report = create_crew_output_report(str(result))
         
         # Send email report
         subject = f"Daily Job Search Report - {datetime.now().strftime('%Y-%m-%d')}"
