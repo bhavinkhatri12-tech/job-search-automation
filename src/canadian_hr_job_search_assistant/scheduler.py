@@ -13,6 +13,21 @@ from canadian_hr_job_search_assistant.email_utils import send_email_report, crea
 MAX_RATE_LIMIT_RETRIES = 6
 
 
+def load_job_sources() -> str:
+    sources_path = Path("knowledge/job_sources.txt")
+    if not sources_path.exists():
+        return "Job Bank Canada, Indeed Canada, LinkedIn Jobs, Glassdoor Canada"
+    return sources_path.read_text(encoding="utf-8").strip()
+
+
+def save_report_artifacts(report_text: str, html_report: str) -> None:
+    report_dir = Path("reports")
+    report_dir.mkdir(exist_ok=True)
+    stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    (report_dir / f"daily_report_{stamp}.md").write_text(report_text, encoding="utf-8")
+    (report_dir / f"daily_report_{stamp}.html").write_text(html_report, encoding="utf-8")
+
+
 def kickoff_with_rate_limit_retry(inputs):
     """Run the crew and wait/retry when Groq returns a TPM rate limit."""
     for attempt in range(1, MAX_RATE_LIMIT_RETRIES + 1):
@@ -49,15 +64,19 @@ def run_job_search():
         'candidate_profile': 'Bhavin Khatri, HR/Admin/Recruitment Professional with 12+ years experience based in Nova Scotia, Canada. Canadian Permanent Resident, arrived in Canada on 2024-06-21, authorized to work for any employer in Canada, no sponsorship required for Canadian roles.',
         'target_roles': 'Talent Acquisition Specialist, Recruiter, HR Generalist, Mid-level HR Business Partner, HR Coordinator, People Operations roles',
         'job_title': 'HR/Admin/Recruitment Professional',
-        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations'
+        'job_search_query': 'HR recruitment talent acquisition jobs Canada US remote Canada-based applicants Nova Scotia recruiter HR Generalist HR Coordinator People Operations',
+        'job_sources': load_job_sources(),
+        'resume_file_path': os.getenv("RESUME_FILE_PATH", "knowledge/resume/Bhavin_Khatri_resume.pdf"),
     }
     
     try:
         # Run the crew
         result = kickoff_with_rate_limit_retry(inputs)
+        report_text = str(result)
         
         # Create HTML report
-        html_report = create_crew_output_report(str(result))
+        html_report = create_crew_output_report(report_text)
+        save_report_artifacts(report_text, html_report)
         
         # Send email report
         subject = f"Daily Job Search Report - {datetime.now().strftime('%Y-%m-%d')}"

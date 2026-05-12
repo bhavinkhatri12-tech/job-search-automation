@@ -19,7 +19,7 @@ def send_email_report(subject: str, body: str, attachments: list = None):
         attachments: List of file paths to attach
     """
     try:
-        sender_email = os.getenv("EMAIL_SENDER", "bhavinkhatri12@gmail.com")
+        sender_email = os.getenv("EMAIL_SENDER") or os.getenv("EMAIL_USER", "bhavinkhatri12@gmail.com")
         sender_password = os.getenv("EMAIL_PASSWORD", "")
         recipient_email = os.getenv("EMAIL_RECIPIENT", "bhavinkhatri12@gmail.com")
         smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")

@@ -1,6 +1,6 @@
 ---
 research_job_listings:
-  description: 'Search for and analyze current job listings for {job_search_domain} roles using the search query: {job_search_query}. Find only the 5 strongest current opportunities matching HR Coordinator, HR Generalist, Talent Acquisition Specialist, Recruiter, and mid-level HRBP positions. For each job, extract job title, company, location, 3-5 key requirements, application URL, and application instructions. Keep findings concise.'
+  description: 'Search for and analyze current job listings for {job_search_domain} roles using the search query: {job_search_query}. Prioritize these sources: {job_sources}. Find only the 5 strongest current opportunities matching HR Coordinator, HR Generalist, Talent Acquisition Specialist, Recruiter, and mid-level HRBP positions. For each job, extract job title, company, location, 3-5 key requirements, application URL, application instructions, and any direct recruiter/employer email if present. Keep findings concise.'
   expected_output: A concise structured list of up to 5 job opportunities with job title, company, location, key requirements, posting URL, and application instructions.
   agent: job_research_specialist
 score_and_match_jobs:
@@ -37,7 +37,8 @@ prepare_application_packages:
     roles, state that Bhavin is a Canadian Permanent Resident, arrived in Canada on
     2024-06-21, is authorized to work for any employer in Canada, and does not require
     sponsorship. Do not claim US work authorization unless the job explicitly allows
-    Canadian-based candidates or remote Canada employment. Create a checklist for each application
+    Canadian-based candidates or remote Canada employment. Use this resume attachment path:
+    {resume_file_path}. Create a checklist for each application
     including required documents, application method (company website vs. job portal),
     and any specific submission requirements. Ensure all materials are consistent,
     professionally formatted, and ready for immediate submission.
@@ -49,13 +50,36 @@ prepare_application_packages:
   context:
   - optimize_resume
   - create_cover_letters
+submit_applications:
+  description: >
+    Attempt to submit applications for every recommended job from the prepared
+    application packages. For jobs with a direct employer or recruiter email address
+    in the posting or application instructions, use the submit_application_email tool
+    to prepare or send a concise application email using the tailored cover letter
+    content and candidate details. The tool sends only when APPLY_APPROVED is true;
+    otherwise it returns APPROVAL_REQUIRED and no email is sent. For jobs that only
+    provide a company website, ATS portal,
+    job board apply button, login page, captcha, or missing contact information, do
+    not claim submission; mark the status as Manual Portal Required and include the
+    exact URL and next action. Never invent employer email addresses and never mark
+    a job Applied unless the tool returns SENT.
+  expected_output: >
+    A truthful application submission log for every recommended job, including
+    company, job title, submission channel, status (Applied by Email, Approval
+    Required, Manual Portal Required, or Skipped), confirmation/tool result when sent, application URL,
+    and next action for anything not submitted.
+  agent: application_submission_specialist
+  context:
+  - prepare_application_packages
 track_job_applications:
   description: 'Create and maintain a comprehensive tracking system for all analyzed
     job opportunities. Record details for each job: date analyzed, company name, job
     title, domain category (HRBP/Recruiter/TA/HR Ops), location, match score, application
-    status (To Apply/Applied/Interview/Rejected), resume version used, and follow-up
-    dates. Organize data in a structured format suitable for Google Sheets or similar
-    tracking tools. Include status updates and notes section for each entry.'
+    status (Applied by Email/Manual Portal Required/Skipped/Interview/Rejected),
+    resume version used, and follow-up dates. Use the submit_applications result as
+    the source of truth for application status; never infer Applied from a prepared
+    package alone. Organize data in a structured format suitable for Google Sheets
+    or similar tracking tools. Include status updates and notes section for each entry.'
   expected_output: A structured tracking database with all job opportunities, their
     details, match scores, application status, and relevant notes organized in a format
     ready for spreadsheet import
@@ -63,18 +87,23 @@ track_job_applications:
   context:
   - score_and_match_jobs
   - prepare_application_packages
+  - submit_applications
 generate_daily_report:
   description: 'Create a comprehensive daily summary report including: total jobs
     analyzed, breakdown by domain (HRBP/Talent Acquisition/Recruiter/HR Ops), top
     5 recommended jobs with match scores, number of application packages prepared,
-    key insights about market trends, and strategic recommendations for next steps.
-    Include highlights of the strongest opportunities and any patterns identified
-    in job requirements. Provide actionable insights for improving application success
-    and market positioning.'
+    number actually submitted, number requiring manual portal submission, key insights
+    about market trends, and strategic recommendations for next steps. Include
+    highlights of the strongest opportunities and any patterns identified in job
+    requirements. Be explicit that only jobs marked Applied by Email were submitted;
+    portal-only jobs are not submitted automatically. Provide actionable insights for
+    improving application success and market positioning.'
   expected_output: A professional daily report summarizing all job search activities,
-    top opportunities, application readiness status, market insights, and strategic
-    recommendations for continued job search success in the Canadian market
+    top opportunities, true submission status, application readiness status, market
+    insights, and strategic recommendations for continued job search success in the
+    Canadian market
   agent: daily_job_search_reporter
   context:
   - track_job_applications
   - prepare_application_packages
+  - submit_applications

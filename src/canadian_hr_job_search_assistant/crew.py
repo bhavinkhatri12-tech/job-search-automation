@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from crewai import LLM, Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import ScrapeWebsiteTool, SerperDevTool
+from canadian_hr_job_search_assistant.tools.custom_tool import ApplicationEmailTool
 
 # ---------------- LOAD ENV ----------------
 load_dotenv()
@@ -104,6 +105,14 @@ class CanadianHrJobSearchAssistantCrew:
         )
 
     @agent
+    def application_submission_specialist(self) -> Agent:
+        return Agent(
+            config=self.agents_config["application_submission_specialist"],
+            tools=[ApplicationEmailTool()],
+            **AGENT_LIMITS,
+        )
+
+    @agent
     def job_search_tracker(self) -> Agent:
         return Agent(
             config=self.agents_config["job_search_tracker"],
@@ -140,6 +149,10 @@ class CanadianHrJobSearchAssistantCrew:
     @task
     def prepare_application_packages(self) -> Task:
         return Task(config=self.tasks_config["prepare_application_packages"])
+
+    @task
+    def submit_applications(self) -> Task:
+        return Task(config=self.tasks_config["submit_applications"])
 
     @task
     def track_job_applications(self) -> Task:
